@@ -2,53 +2,93 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Video Game Gallery</title>
+    <title>Video Game Library</title>
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <!-- Including Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
 
-<div class="w3-row-padding w3-section" id="game-list">
-    <!-- Video games will be loaded here by script.js -->
+<header>
+    <h1>Video Game Library <a href="#" id="showAddGameModal"><i class="fas fa-plus"></i></a></h1>
+</header>
+
+<div id="imageGallery" class="columns"></div>
+
+<!-- Add/Edit Game Modal -->
+<div id="addEditGameModal" class="w3-modal">
+    <div class="w3-modal-content">
+        <header class="w3-container w3-primary">
+            <span onclick="document.getElementById('addEditGameModal').style.display='none'"
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Add/Edit Game</h2>
+        </header>
+        <div class="w3-container">
+            <form id="game-form" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="game-id" name="game-id">
+                <p>
+                    <label for="title">Game Title:</label>
+                    <input type="text" id="title" name="title" required>
+                </p>
+                <p>
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" required>
+                </p>
+                <p>
+                    <label for="gameArtwork">Upload Cover Image:</label>
+                    <input type="file" id="gameArtwork" name="gameArtwork" accept="image/*">
+                    <img id="artwork-prev" style="display:none;">
+                </p>
+                <p id="platforms-p">
+                    <label>Platforms:</label>
+                    <button type="button" id="addPlatform"><i class="fas fa-plus"></i> Add Platform</button>
+                    <section id="platform-boxes">
+                        <input type="text" name="platforms[]" required>
+                    </section>
+                </p>
+                <p>
+                    <button type="submit"><i class="fas fa-save"></i> Submit</button>
+                </p>
+            </form>
+        </div>
+    </div>
 </div>
 
 <!-- Game Details Modal -->
-<div id="game-details" class="modal" style="display:none;">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p id="modalInfo">Some text in the Modal..</p>
-  </div>
+<div id="game-details-modal" class="w3-modal">
+    <div class="w3-modal-content">
+        <header class="w3-container w3-primary">
+            <span onclick="document.getElementById('game-details-modal').style.display='none'"
+            class="w3-button w3-display-topright">&times;</span>
+            <h2>Game Details</h2>
+        </header>
+        <div class="w3-container" id="game-details-content">
+            <!-- Dynamic game details will be injected here -->
+        </div>
+       
+    </div>
+</div>
+<!-- Delete Confirmation Modal -->
+<div id="delete-confirmation-modal" class="w3-modal">
+    <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+        <div class="w3-center"><br>
+            <span onclick="document.getElementById('delete-confirmation-modal').style.display='none'"
+                  class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</span>
+        </div>
+        <form class="w3-container">
+            <div class="w3-section">
+                <h3>Are you sure?</h3>
+                <p>Do you really want to delete this game? This process cannot be undone.</p>
+                <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+                    <button type="button" onclick="confirmDelete()" class="w3-button w3-red">Delete</button>
+                    <button type="button" onclick="document.getElementById('delete-confirmation-modal').style.display='none'" class="w3-button w3-gray">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
-<!-- '+' Link/Button for Adding Games -->
-<div class="add-item-button">
-  <a href="#" id="showAddGameModal">+</a>
-</div>
-
-<!-- Add/Edit Game Modal -->
-<div id="addEditGameModal" class="modal" style="display:none;">
-  <div class="modal-content">
-    <span class="close close-modal">&times;</span>
-    <form id="game-form">
-      <h2>Add/Edit Video Game</h2>
-      <label for="title">Game Title:</label>
-      <input type="text" id="title" name="title" required><br><br>
-      
-      <label for="gameArtwork">Select Game Artwork:</label>
-      <input type="file" id="artwork" name="artwork" accept="image/*" required><br>
-      <img id="artwork-prev" src="" alt="Artwork preview" style="max-width: 100%; display: none;"><br><br>
-      
-      <div id="platform-boxes">
-        <label>Platforms:</label>
-        <input type="text" name="platforms[]" required>
-      </div>
-      <button type="button" id="add-platform">Add Platform</button><br><br>
-      
-      <button type="submit">Save Game</button>
-      <button type="button" class="close-modal">Cancel</button>
-    </form>
-  </div>
-</div>
 
 <script src="script.js"></script>
 </body>

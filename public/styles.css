@@ -1,125 +1,188 @@
-/* Modal background */
-.modal {
-    display: none; 
-    position: fixed; 
-    z-index: 2; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgba(0,0,0,0.6); 
-  }
-  
-  /* Modal content */
-  .modal-content {
-    position: relative;
-    background-color: #fff;
-    margin: 10% auto; 
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    width: 40%; 
-  }
-  /* Form styling */
-  #addItemForm {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  #addItemForm label {
-    margin-bottom: 5px;
-    font-weight: 600;
-  }
-  
-  #addItemForm input[type="text"],
-  #addItemForm input[type="file"] {
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  #addItemForm button {
-    padding: 10px 20px;
-    background-color: #0056b3;
+:root {
+    --primary-color: #007bff; /* Primary color for your theme */
+    --hover-color: #0056b3; /* Darker shade for hover states */
+    --text-color: #333; /* Main text color for better readability */
+    --background-color: #f4f4f4; /* Light background to keep it airy */
+    --modal-background: #ffffff; /* Background color for modals */
+    --shadow-color: rgba(0, 0, 0, 0.2); /* Shadow color for depth */
+}
+.w3-button.w3-display-topright {
+    color: black !important; /* Always black, overriding other styles */
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+.edit-game-btn {
+    margin-right: 10px; /* Adjust the value as needed */
+}
+
+.edit-game-btn, .delete-game-btn {
+    margin-right: 10px;
+}
+
+header {
+    background-color: var(--primary-color);
     color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5em;
+    margin-left: 15px;
+    padding: 5px 10px;
+    background-color: var(--hover-color);
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+header a:hover {
+    background-color: #004494;
+}
+
+.columns {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    justify-content: space-around;
+}
+
+.w3-quarter {
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.w3-quarter:hover {
+    transform: translateY(-5px);
+}
+
+.w3-modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    transition: all 0.3s ease;
+}
+
+.w3-button {
+    cursor: pointer;
+}
+
+.w3-container {
+    padding: 20px;
+    background-color: var(--modal-background);
+}
+
+.game-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.game-edit, .game-delete {
+    margin-left: 25px;
+    cursor: pointer;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.game-edit:hover, .game-delete:hover {
+    color: var(--hover-color);
+}
+
+#platform-boxes input, #title, #description {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#gameArtwork {
+    display: block;
+    margin-top: 10px;
+}
+
+#artwork-prev {
+    max-width: 100px;
+    margin-top: 10px;
+    border-radius: 5px; /* Added border-radius */
+}
+
+button, .edit-game-btn, .delete-game-btn {
+    background-color: var(--primary-color);
+    color: black;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-right: 10px;
-  }
-  
-  #addItemForm button:hover {
-    background-color: #004494;
-  }
-  
-  /* Supply inputs specifically */
-  #suppliesContainer {
-    margin-bottom: 20px;
-  }
-  
-  #imagePreview {
-    max-width: 100%;
-    height: auto;
-    margin-top: 20px;
-  }
-  #imageGallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-top: 20px;
-  }
-  
-  .w3-quarter {
-    flex: 1;
-    min-width: 220px;
-  }
-  
-  .w3-quarter img {
-    border-radius: 8px;
-    transition: transform 0.2s; /* Animation */
-  }
-  
-  .w3-quarter img:hover {
-    transform: scale(1.05); /* (110% zoom - Note: if the zoom is too large, it will blur.) */
-  }
-  /* Style for the "+" button to add a new item */
-  #showAddItemModal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    bottom: 20px; /* Distance from bottom */
-    right: 20px; /* Distance from right */
-    width: 60px; /* Button width */
-    height: 60px; /* Button height */
-    background-color: #007bff; /* Button color - consider using your college colors */
-    color: white; /* Text color */
-    border-radius: 50%; /* Circular shape */
-    font-size: 30px; /* Text size */
-    text-align: center;
-    text-decoration: none; /* Remove underline from link */
-    z-index: 3; /* Ensure it's above other content */
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-  }
-  
-  #showAddItemModal:hover {
-    background-color: #0056b3; /* Darker shade on hover */
-  }
-  
-  
-  @media (max-width: 800px) {
-    .column {
-        flex: 50%;
-        max-width: 50%;
+   margin-left: 200px;
+}
+
+button:hover, .edit-game-btn:hover, .delete-game-btn:hover {
+    background-color: var(--hover-color);
+}
+
+#addPlatform {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+#addPlatform:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+#game-details-content img {
+    max-width: 50%;
+    display: block;
+    margin: 10px auto;
+    border-radius: 5px; /* Soften the edges */
+}
+
+.edit-game-btn, .delete-game-btn {
+    margin: 10px 5px; /* Adjust spacing */
+}
+
+.edit-game-btn {
+    background-color: #4CAF50; /* Green */
+}
+
+.delete-game-btn {
+    background-color: #f44336; /* Red */
+}
+
+.edit-game-btn:hover {
+    background-color: #45a049;
+}
+
+.delete-game-btn:hover {
+    background-color: #d32f2f;
+}
+
+.game-actions {
+    text-align: right;
+    padding-bottom: 20px;
+}
+
+/* Responsive layout adjustments */
+@media (max-width: 600px) {
+    .columns {
+        flex-direction: column;
     }
-  }
-  
-  @media (max-width: 600px) {
-    .column {
-        flex: 100%;
-        max-width: 100%;
+
+    .w3-modal-content {
+        width: 90% !important; /* Override w3.css settings for smaller screens */
     }
-  }
+}
