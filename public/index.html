@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Game Gallery</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+
+<div class="w3-row-padding w3-section" id="game-list">
+    <!-- Video games will be loaded here by script.js -->
+</div>
+
+<!-- Game Details Modal -->
+<div id="game-details" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p id="modalInfo">Some text in the Modal..</p>
+  </div>
+</div>
+
+<!-- '+' Link/Button for Adding Games -->
+<div class="add-item-button">
+  <a href="#" id="showAddGameModal">+</a>
+</div>
+
+<!-- Add/Edit Game Modal -->
+<div id="addEditGameModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close close-modal">&times;</span>
+    <form id="game-form">
+      <h2>Add/Edit Video Game</h2>
+      <label for="title">Game Title:</label>
+      <input type="text" id="title" name="title" required><br><br>
+      
+      <label for="gameArtwork">Select Game Artwork:</label>
+      <input type="file" id="artwork" name="artwork" accept="image/*" required><br>
+      <img id="artwork-prev" src="" alt="Artwork preview" style="max-width: 100%; display: none;"><br><br>
+      
+      <div id="platform-boxes">
+        <label>Platforms:</label>
+        <input type="text" name="platforms[]" required>
+      </div>
+      <button type="button" id="add-platform">Add Platform</button><br><br>
+      
+      <button type="submit">Save Game</button>
+      <button type="button" class="close-modal">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
