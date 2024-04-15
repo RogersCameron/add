@@ -6,6 +6,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error loading video game data:', error);
     }
 
+    // Check if required elements exist
+    const gallery = document.getElementById('imageGallery');
+    const detailsContent = document.getElementById('game-details-content');
+
+    if (!gallery || !detailsContent) {
+        console.error('One or more required elements are missing!');
+        return; // Stop further execution if elements are missing
+    }
+
     setupModalTriggers();
     setupAddGameForm();
 });
@@ -39,111 +48,96 @@ function showVideoGames(videoGames) {
 function displayGameDetails(game) {
     const detailsModal = document.getElementById('game-details-modal');
     const detailsContent = document.getElementById('game-details-content');
+    detailsModal.style.display = 'block';
 
     detailsContent.innerHTML = `
         <h3>${game.title}</h3>
         <p><strong>Description:</strong> ${game.description}</p>
-        <p><strong>Genres:</strong> ${game.genres.join(', ')}</p>
         <p><strong>Platforms:</strong> ${game.platforms.join(', ')}</p>
-        <img src="${game.cover}" style="width:50%;"><br><br>`;
-
-        const editButton = document.createElement('button');
-        editButton.innerHTML = '<i class="fas fa-pencil-alt"></i>'; // Using innerHTML to include the FontAwesome icon
-        editButton.classList.add("edit-game-btn"); // Assuming you have CSS styles for this class
-        editButton.onclick = () => populateEditForm(game);
-
-        const deleteButton = document.createElement('button');
-        deleteButton.innerHTML = '<i class="fas fa-trash"></i>'; // Using innerHTML to include the FontAwesome icon
-        deleteButton.classList.add("delete-game-btn"); // Assuming you have CSS styles for this class
-        deleteButton.onclick = () => deleteGame(game.id);
-
-    detailsContent.appendChild(editButton);
-    detailsContent.appendChild(deleteButton);
-
-    detailsModal.style.display = 'block';
+        <img src="${game.cover}" style="width:50%;">
+        <br><br>
+        <button onclick="populateEditForm(${JSON.stringify(game).split('"').join("&quot;")})" class="edit-game-btn"><i class="fas fa-pencil-alt"></i> Edit</button>
+        <button onclick="deleteGame(${game.id})" class="delete-game-btn"><i class="fas fa-trash"></i> Delete</button>
+    `;
 }
 
 function setupModalTriggers() {
-    document.getElementById('showAddGameModal').addEventListener('click', (event) => {
-        event.preventDefault();
-        resetAddGameForm();
+    document.getElementById('showAddGameModal').addEventListener('click', () => {
         document.getElementById('addEditGameModal').style.display = 'block';
+        resetAddGameForm();
     });
 
-    Array.from(document.getElementsByClassName('close')).forEach((element) => {
-        element.addEventListener('click', () => {
+    document.querySelectorAll('.close').forEach(element => {
+        element.onclick = () => {
             element.closest('.modal').style.display = 'none';
-        });
+        };
     });
 }
-
-function populateEditForm(game) {
-    const form = document.getElementById('game-form');
-    form.reset(); // Reset the form to ensure it's clean
-  
-    // Populate the form with game details
-    document.getElementById('game-id').value = game.id;
-    document.getElementById('title').value = game.title;
-    document.getElementById('description').value = game.description;
-  
-    // Hide the details modal and show the form modal
-    document.getElementById('game-details-modal').style.display = 'none';
-    document.getElementById('addEditGameModal').style.display = 'block';
-  }
-  
-  async function deleteGame(gameId) {
-    if (!confirm('Are you sure you want to delete this game?')) return;
-    try {
-      await fetch(`/api/videogames/${gameId}`, { method: 'DELETE' });
-      alert('Game deleted successfully');
-      location.reload(); // Reload the page to refresh the game list
-    } catch (error) {
-      alert('Failed to delete the game');
-    }
-  }
-  
 
 function resetAddGameForm() {
     const form = document.getElementById('game-form');
     form.reset();
-    document.getElementById('game-id').value = ''; // Ensure game ID is cleared for new entries
+    document.getElementById('game-id').value = '';
 }
+
 function populateEditForm(game) {
-    // Hide the game details modal
+    const form = document.getElementById('game-form');
     document.getElementById('game-details-modal').style.display = 'none';
-
-    // Populate the edit form with the game's data
-    document.getElementById('game-id').value = game.id;
-    document.getElementById('title').value = game.title;
-    document.getElementById('description').value = game.description;
-    // Populate other fields like genres and platforms as per your form design
-
-    // Show the edit game modal
     document.getElementById('addEditGameModal').style.display = 'block';
-}
 
+    // Ensure you're assigning the _id of the game here correctly
+    form['game-id'].value = game._id;  // Change from game.id to game._id if necessary
+    form['title'].value = game.title;
+    form['description'].value = game.description;
+    form['platforms'].value = game.platforms.join(',');
+}
 
 function setupAddGameForm() {
     const form = document.getElementById('game-form');
-    form.addEventListener('submit', async (event) => {
+    form.onsubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData(form);
-        const gameId = document.getElementById('game-id').value;
-        const url = gameId ? `/api/videogames/${gameId}` : '/api/videogames'; // Endpoint for updating or adding a game
-        const method = gameId ? 'PUT' : 'POST'; // Use PUT to update an existing game, POST to add a new one
+        const gameId = form['game-id'].value;
+        const method = gameId ? 'PUT' : 'POST';
+        const url = gameId ? `/api/videogames/${gameId}` : '/api/videogames';
 
-        const response = await fetch(url, {
-            method: method,
-            body: formData,
-        });
+        try {
+            const response = await fetch(url, {
+                method: method,
+                body: formData,
+            });
 
-        if (response.ok) {
+            if (!response.ok) {
+                throw new Error('Failed to save the game: ' + await response.text());
+            }
+
+            alert('Game saved successfully');
             form.reset();
             document.getElementById('addEditGameModal').style.display = 'none';
+            // Refresh the game list
             const videoGames = await getVideoGames();
             showVideoGames(videoGames);
-        } else {
-            alert('Error saving game');
+        } catch (error) {
+            alert(error.message);
         }
-    });
+    };
 }
+
+// Function to handle game deletion
+const deleteGame = async (gameId) => {
+  try {
+    const response = await fetch(`/api/videogames/${gameId}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      throw new Error('Failed to delete the game');
+    }
+    const result = await response.json();
+    console.log('Game deleted successfully:', result);
+    // Refresh game list or update UI accordingly
+    const videoGames = await getVideoGames();
+    showVideoGames(videoGames);
+  } catch (error) {
+    console.error('Error during game deletion:', error);
+  }
+};
