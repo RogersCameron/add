@@ -24,32 +24,17 @@
 <div id="addEditGameModal" class="w3-modal">
     <div class="w3-modal-content">
         <header class="w3-container w3-primary">
-            <span onclick="document.getElementById('addEditGameModal').style.display='none'"
-            class="w3-button w3-display-topright">&times;</span>
+            <span onclick="document.getElementById('addEditGameModal').style.display='none'" class="w3-button w3-display-topright">&times;</span>
             <h2 id="form-title">Add/Edit Game</h2>
         </header>
         <div class="w3-container">
             <form id="game-form" method="post" enctype="multipart/form-data">
                 <input type="hidden" id="game-id" name="game-id" value="">
-                <p>
-                    <label for="title">Game Title:</label>
-                    <input type="text" id="title" name="title" required>
-                </p>
-                <p>
-                    <label for="description">Description:</label>
-                    <input type="text" id="description" name="description" required>
-                </p>
-                <p>
-                    <label for="gameArtwork">Upload Cover Image:</label>
-                    <input type="file" id="gameArtwork" name="gameArtwork" accept="image/*">
-                </p>
-                <p>
-                    <label for="platforms">Platforms:</label>
-                    <input type="text" id="platforms" name="platforms" required>
-                </p>
-                <p>
-                    <button type="submit">Submit</button>
-                </p>
+                <p><label for="title">Game Title:</label><input type="text" id="title" name="title" required></p>
+                <p><label for="description">Description:</label><input type="text" id="description" name="description" required></p>
+                <p><label for="gameArtwork">Upload Cover Image:</label><input type="file" id="gameArtwork" name="gameArtwork" accept="image/*"></p>
+                <p><label for="platforms">Platforms:</label><input type="text" id="platforms" name="platforms" required></p>
+                <p><button type="submit">Submit</button></p>
             </form>
         </div>
     </div>
@@ -59,11 +44,12 @@
 <div id="game-details-modal" class="w3-modal">
     <div class="w3-modal-content">
         <header class="w3-container w3-primary">
-            <span onclick="document.getElementById('game-details-modal').style.display='none'"
-            class="w3-button w3-display-topright">&times;</span>
+            <span onclick="document.getElementById('game-details-modal').style.display='none'" class="w3-button w3-display-topright">&times;</span>
             <h2>Game Details</h2>
         </header>
         <div class="w3-container" id="game-details-content">
+            
+
             <!-- Dynamic game details will be injected here -->
         </div>
     </div>
@@ -77,11 +63,14 @@
                   class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</span>
             <h3>Are you sure?</h3>
             <p>Do you really want to delete this game? This process cannot be undone.</p>
-            <button type="button" onclick="confirmDelete()" class="w3-button w3-red">Delete</button>
+            <input type="hidden" id="game-id-to-delete">
+            <button type="button" onclick="deleteGame()" class="w3-button w3-red">Delete</button>
             <button type="button" onclick="document.getElementById('delete-confirmation-modal').style.display='none'" class="w3-button w3-gray">Cancel</button>
         </div>
     </div>
 </div>
+
+
 
 <script src="script.js"></script>
 </body>

@@ -160,7 +160,7 @@ button:hover, .edit-game-btn:hover, .delete-game-btn:hover {
 }
 
 .delete-game-btn {
-    background-color: #f44336; /* Red */
+    background-color: red; /* Red */
 }
 
 .edit-game-btn:hover {

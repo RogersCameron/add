@@ -97,14 +97,18 @@ app.put('/api/videogames/:id', upload.single('cover'), async (req, res) => {
 
 
 app.delete('/api/videogames/:id', async (req, res) => {
+  console.log("Received delete request for ID:", req.params.id);
   try {
-      const game = await Game.findByIdAndDelete(req.params.id);
-      if (!game) {
-          return res.status(404).send('Game not found');
-      }
-      res.send({ message: 'Game deleted successfully', game });
+    const game = await Game.findByIdAndDelete(req.params.id);
+    if (!game) {
+      console.log("No game found with ID:", req.params.id);
+      return res.status(404).send('Game not found');
+    }
+    console.log("Deleted game:", game);
+    res.send({ message: 'Game deleted successfully', game });
   } catch (err) {
-      res.status(500).send('Server error');
+    console.error("Error deleting game:", err);
+    res.status(500).send('Server error');
   }
 });
 

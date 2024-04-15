@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error loading video game data:', error);
     }
 
-    // Check if required elements exist
     const gallery = document.getElementById('imageGallery');
     const detailsContent = document.getElementById('game-details-content');
 
@@ -57,9 +56,11 @@ function displayGameDetails(game) {
         <img src="${game.cover}" style="width:50%;">
         <br><br>
         <button onclick="populateEditForm(${JSON.stringify(game).split('"').join("&quot;")})" class="edit-game-btn"><i class="fas fa-pencil-alt"></i> Edit</button>
-        <button onclick="deleteGame(${game.id})" class="delete-game-btn"><i class="fas fa-trash"></i> Delete</button>
-    `;
+        <button onclick="showDeleteConfirmation('${game._id}')" class="delete-game-btn"><i class="fas fa-trash"></i> Delete</button>
+        `;
 }
+
+
 
 function setupModalTriggers() {
     document.getElementById('showAddGameModal').addEventListener('click', () => {
@@ -85,8 +86,8 @@ function populateEditForm(game) {
     document.getElementById('game-details-modal').style.display = 'none';
     document.getElementById('addEditGameModal').style.display = 'block';
 
-    // Ensure you're assigning the _id of the game here correctly
-    form['game-id'].value = game._id;  // Change from game.id to game._id if necessary
+    
+    form['game-id'].value = game._id;  
     form['title'].value = game.title;
     form['description'].value = game.description;
     form['platforms'].value = game.platforms.join(',');
@@ -123,21 +124,26 @@ function setupAddGameForm() {
     };
 }
 
-// Function to handle game deletion
-const deleteGame = async (gameId) => {
-  try {
-    const response = await fetch(`/api/videogames/${gameId}`, {
-      method: "DELETE",
-    });
-    if (!response.ok) {
-      throw new Error('Failed to delete the game');
+const deleteGame = async () => {
+    const gameId = document.getElementById('game-id-to-delete').value;
+    try {
+        const response = await fetch(`/api/videogames/${gameId}`, {
+            method: "DELETE",
+        });
+        if (!response.ok) {
+            throw new Error('Failed to delete the game: ' + await response.text());
+        }
+        alert('Game deleted successfully');
+        document.getElementById('delete-confirmation-modal').style.display = 'none';
+        // Optionally refresh the game list or update the UI accordingly
+    } catch (error) {
+        console.error('Error during game deletion:', error.message);
+        alert('Error during game deletion: ' + error.message);
     }
-    const result = await response.json();
-    console.log('Game deleted successfully:', result);
-    // Refresh game list or update UI accordingly
-    const videoGames = await getVideoGames();
-    showVideoGames(videoGames);
-  } catch (error) {
-    console.error('Error during game deletion:', error);
-  }
+
 };
+
+function showDeleteConfirmation(gameId) {
+    document.getElementById('game-id-to-delete').value = gameId; // Set the game ID to the hidden input
+    document.getElementById('delete-confirmation-modal').style.display = 'block'; // Show the modal
+}
